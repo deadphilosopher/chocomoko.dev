@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+  web:
+    image: chokomoko-web
+    restart: unless-stopped
+    tty: true
+    build:
+      context: chokomoko-web
+      dockerfile: Dockerfile
+
+  lb:
+    image: chokomoko-lb
+    restart: unless-stopped
+    tty: true
+    build:
+      context: chokomoko-lb
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - PROXY_PROTOCOL
+      - PROXY_UPSTREAM
+    depends_on:
+      - "web"
+
