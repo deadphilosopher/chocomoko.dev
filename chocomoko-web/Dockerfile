@@ -2,7 +2,7 @@
 FROM debian:buster-slim
 
 # Environment settings
-ENV DEBIAN_FRONTEND noninteractive
+ENV HTTP_SERVICE_PORT=8080
 
 # Package update, install nginx, and filesystem clean-up
 RUN apt-get update \
@@ -13,7 +13,7 @@ nginx \
 && apt-get autoremove --purge \
 && rm -rf /var/lib/apt/lists/*
 
-# Content sync
+# Copy static content
 ADD index.html /var/www/html/
 ADD assets /var/www/html/assets/
 ADD images /var/www/html/images/
@@ -22,13 +22,14 @@ ADD images /var/www/html/images/
 RUN rm /var/log/nginx/access.log && ln -s /dev/stdout /var/log/nginx/access.log
 RUN rm /var/log/nginx/error.log && ln -s /dev/stderr /var/log/nginx/error.log
 
+# Copy template configuration
+COPY static-env-web.conf /var/tmp/default.template
+#COPY static-env-web.conf /etc/nginx/sites-available/default.template
+COPY configure-vars.sh /
+
 # Expose TCP/80 HTTP
 EXPOSE 8080
 
-# Config 
-COPY default-nginx.conf /etc/nginx/sites-available/default
-COPY start.sh /
-
-# Start Nginx
-#CMD ["nginx","-g","daemon off;"]
-ENTRYPOINT ["/start.sh"]
+# Configuration and start nginx
+ENTRYPOINT ["/configure-vars.sh"]
+CMD ["nginx","-g","daemon off;"]

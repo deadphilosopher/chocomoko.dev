@@ -7,11 +7,14 @@ services:
     tty: true
     read_only: true
     tmpfs:
+      - /etc/nginx/sites-available
       - /var/lib/nginx
       - /run
     build:
       context: chocomoko-web
       dockerfile: Dockerfile
+    environment:
+      - WEB_SERVER_PORT
 
   lb:
     image: chocomoko-lb
@@ -23,6 +26,7 @@ services:
     ports:
       - "80:80"
     environment:
+      - PROXY_SERVER_PORT
       - PROXY_PROTOCOL
       - PROXY_UPSTREAM
     depends_on:
