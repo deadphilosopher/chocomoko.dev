@@ -27,6 +27,8 @@ EXPOSE 8080
 
 # Config 
 COPY default-nginx.conf /etc/nginx/sites-available/default
+COPY start.sh /
 
 # Start Nginx
-CMD ["nginx","-g","daemon off;"]
+#CMD ["nginx","-g","daemon off;"]
+ENTRYPOINT ["/start.sh"]

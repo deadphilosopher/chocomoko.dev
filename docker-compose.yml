@@ -2,19 +2,23 @@ version: '3.3'
 
 services:
   web:
-    image: chokomoko-web
+    image: chocomoko-web
     restart: unless-stopped
     tty: true
+    read_only: true
+    tmpfs:
+      - /var/lib/nginx
+      - /run
     build:
-      context: chokomoko-web
+      context: chocomoko-web
       dockerfile: Dockerfile
 
   lb:
-    image: chokomoko-lb
+    image: chocomoko-lb
     restart: unless-stopped
     tty: true
     build:
-      context: chokomoko-lb
+      context: chocomoko-lb
       dockerfile: Dockerfile
     ports:
       - "80:80"
