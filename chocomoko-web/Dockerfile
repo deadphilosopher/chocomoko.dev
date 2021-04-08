@@ -9,6 +9,7 @@ RUN apt-get update \
 && apt-get -y install -y \
 gettext-base \
 nginx \
+curl \
 && apt-get clean \
 && apt-get autoremove --purge \
 && rm -rf /var/lib/apt/lists/*
@@ -29,6 +30,10 @@ COPY configure-vars.sh /
 
 # Expose TCP/80 HTTP
 EXPOSE 8080
+
+# Healthcheck
+HEALTHCHECK --interval=15s --timeout=5s --retries=2 \
+  CMD curl --fail http://localhost:8080/index.html || exit 1
 
 # Configuration and start nginx
 ENTRYPOINT ["/configure-vars.sh"]
