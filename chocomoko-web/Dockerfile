@@ -1,5 +1,6 @@
 # Base
-FROM nginx:latest
+# FROM nginx:stable
+FROM sha256:c79f4fe604e3fe77cb5142e9747da3132d252af21fbb9a9d294fa2128499a8f1
 
 # Copy static content
 ADD index.html /usr/share/nginx/html/
